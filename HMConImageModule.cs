@@ -6,12 +6,17 @@ using HMConImage.Formats;
 using System;
 using System.Collections.Generic;
 
-namespace HMConImage {
+namespace HMConImage
+{
 
-	[ModuleInfo("ImageModule", "Image importer/exporter v1.0")]
-	public class HMConImageModule : HMConModule {
+	public class HMConImageModule : HMConModule
+	{
+		public override string ModuleID => "ImageModule";
+		public override string ModuleName => "Image Importer/Exporter";
+		public override string ModuleVersion => "1.0";
 
-		public override HMConCommandHandler GetCommandHandler() {
+		public override HMConCommandHandler GetCommandHandler()
+		{
 			return new ImageCommandHandler();
 		}
 
