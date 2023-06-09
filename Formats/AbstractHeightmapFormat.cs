@@ -17,7 +17,7 @@ namespace HMConImage.Formats
 			return HeightmapImporter.Import(importPath, args);
 		}
 
-		public override void ModifyFileName(ExportJob exportJob, FileNameBuilder nameBuilder)
+		public override void ModifyFileName(ExportTask task, FileNameBuilder nameBuilder)
 		{
 			nameBuilder.suffix = "height";
 		}

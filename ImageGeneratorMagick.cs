@@ -130,7 +130,7 @@ namespace HMConImage {
 
 		private MagickImage CreateImage(int sizeOffset = 0, MagickFormat format = MagickFormat.Png24)
 		{
-			return CreateImage(data.GridWidth + sizeOffset, data.GridHeight + sizeOffset, format);
+			return CreateImage(data.GridLengthX + sizeOffset, data.GridLengthY + sizeOffset, format);
 		}
 
 		private ushort[] CreateColorGrayscale(float v) {

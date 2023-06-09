@@ -15,10 +15,10 @@ namespace HMConImage
 		{
 			if (sharpMode)
 			{
-				var normals = new Vector3[grid.GridWidth, grid.GridHeight];
-				for (int x = 0; x < grid.GridWidth - 1; x++)
+				var normals = new Vector3[grid.GridLengthX, grid.GridLengthY];
+				for (int x = 0; x < grid.GridLengthX - 1; x++)
 				{
-					for (int y = 0; y < grid.GridHeight - 1; y++)
+					for (int y = 0; y < grid.GridLengthY - 1; y++)
 					{
 						float ll = grid.GetHeightBounded(x, y);
 						float lr = grid.GetHeightBounded(x + 1, y);
@@ -40,10 +40,10 @@ namespace HMConImage
 			}
 			else
 			{
-				var normals = new Vector3[grid.GridWidth, grid.GridHeight];
-				for (int x = 0; x < grid.GridWidth; x++)
+				var normals = new Vector3[grid.GridLengthX, grid.GridLengthY];
+				for (int x = 0; x < grid.GridLengthX; x++)
 				{
-					for (int y = 0; y < grid.GridHeight; y++)
+					for (int y = 0; y < grid.GridLengthY; y++)
 					{
 						float m = grid.GetHeightBounded(x, y);
 						float r = GetSlope(grid.GetHeightBounded(x + 1, y), m, grid.cellSize);

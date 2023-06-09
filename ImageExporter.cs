@@ -22,7 +22,7 @@ namespace HMConImage
 			Bitmap result;
 			if (baseMap == null)
 			{
-				result = new Bitmap(data.GridWidth, data.GridHeight);
+				result = new Bitmap(data.GridLengthX, data.GridLengthY);
 				var graphics = Graphics.FromImage(result);
 				graphics.FillRectangle(new SolidBrush(Color.Gray), new Rectangle(0, 0, baseMap.Width, baseMap.Height));
 			}

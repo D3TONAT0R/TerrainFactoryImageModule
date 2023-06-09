@@ -13,9 +13,9 @@ namespace HMConImage.Formats
 		public override string Extension => "png";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.ImportAndExport;
 
-		protected override bool ExportFile(string path, ExportJob job)
+		protected override bool ExportFile(string path, ExportTask task)
 		{
-			var gen = new ImageGeneratorMagick(job.data, ImageType.Heightmap8, job.data.lowPoint, job.data.highPoint);
+			var gen = new ImageGeneratorMagick(task.data, ImageType.Heightmap8, task.data.lowPoint, task.data.highPoint);
 			gen.WriteFile(path, ImageMagick.MagickFormat.Png24);
 			return true;
 		}
