@@ -52,7 +52,7 @@ namespace HMConImage {
 			for(int x = 0; x < image.Width; x++) {
 				for(int y = 0; y < image.Height; y++) {
 					float v = MathUtils.Clamp01(MathUtils.InverseLerp(lowValue, highValue, data.GetHeightUnchecked(x,y)));
-					pixels.SetPixel(x, image.Height - y - 1, CreateColorGrayscale(v));
+					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
 				}
 			}
 		}
@@ -77,7 +77,7 @@ namespace HMConImage {
 					float r = 0.5f + nrm.X / 2f;
 					float g = 0.5f + nrm.Y / 2f;
 					float b = 0.5f + nrm.Z / 2f;
-					pixels.SetPixel(x, image.Height - y - 1, CreateColor(r, g, b));
+					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColor(r, g, b));
 				}
 			}
 		}
@@ -101,7 +101,7 @@ namespace HMConImage {
 					Vector3 nrm = normals[x, y];
 					float illum = -Vector3.Dot(nrm, sunNormal);
 					illum = Math.Max(0, Math.Min(1, illum * 0.5f * intensity + 0.5f));
-					pixels.SetPixel(x, image.Height - y - 1, CreateColorGrayscale(illum));
+					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(illum));
 				}
 			}
 		}
@@ -131,19 +131,6 @@ namespace HMConImage {
 		private MagickImage CreateImage(int sizeOffset = 0, MagickFormat format = MagickFormat.Png24)
 		{
 			return CreateImage(data.GridLengthX + sizeOffset, data.GridLengthY + sizeOffset, format);
-		}
-
-		private ushort[] CreateColorGrayscale(float v) {
-			ushort u = (ushort)(v * ushort.MaxValue);
-			return new ushort[] { u, u, u, ushort.MaxValue };
-		}
-
-		private ushort[] CreateColor(float r, float g, float b)
-		{
-			ushort ur = (ushort)(r * ushort.MaxValue);
-			ushort ug = (ushort)(g * ushort.MaxValue);
-			ushort ub = (ushort)(b * ushort.MaxValue);
-			return new ushort[] { ur, ug, ub, ushort.MaxValue };
 		}
 	}
 }

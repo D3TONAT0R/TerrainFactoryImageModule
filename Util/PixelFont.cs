@@ -1,24 +1,26 @@
 using HMCon;
 using HMConImage;
+using ImageMagick;
 using System.Drawing;
 
 namespace HMConImage {
 	public static class PixelFont {
 
-		public static void DrawString(Bitmap img, string str, ref int x, ref int y, Color color, float opacity) {
+		public static void DrawString(MagickImage img, string str, ref int x, ref int y, Color color, float opacity) {
 			x++;
 			y++;
+			var pixels = img.GetPixels();
 			foreach(char c in str) {
-				DrawChar(img, c, ref x, ref y, color, opacity);
+				DrawChar(img, pixels, c, ref x, ref y, color, opacity);
 			}
 		}
 
-		public static void DrawChar(Bitmap img, char c, ref int x, ref int y, Color color, float opacity) {
+		public static void DrawChar(MagickImage img, IPixelCollection<ushort> pixels, char c, ref int x, ref int y, Color color, float opacity) {
 			bool[,] map = GetCharPixels(c);
 			for(int i = 0; i < map.GetLength(0); i++) {
 				for(int j = 0; j < map.GetLength(1); j++) {
 					if(map[i, j]) {
-						Previewer.SetPixel(img, x + i, y + j, color, opacity);
+						ColorUtil.SetPixel(img, pixels, x + i, y + j, color, opacity);
 					}
 				}
 			}
