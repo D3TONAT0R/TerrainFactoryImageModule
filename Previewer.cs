@@ -20,9 +20,9 @@ namespace HMConImage {
 			(1000,Color.Yellow),
 		};
 
-		public static void OpenDataPreview(Job job, bool heightmap) {
+		public static void OpenDataPreview(Worksheet sheet, bool heightmap) {
 
-			var data = job.ApplyModificationChain(job.CurrentData);
+			var data = sheet.ApplyModificationChain(sheet.CurrentData);
 
 			var exporter = new ImageGeneratorMagick(data, heightmap ? ImageType.Heightmap8 : ImageType.Hillshade, data.lowPoint, data.highPoint);
 			MakeGrid(exporter.GetImage(), data.offsetFromSource);

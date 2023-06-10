@@ -11,19 +11,19 @@ namespace HMConImage {
 			list.Add(new ConsoleCommand("preview-hm", "", "Previews the grid data in a heightmap", HandleHMPreviewCmd));
 		}
 
-		private bool HandlePreviewCmd(Job job, string[] args) {
-			OpenPreview(job, false);
+		private bool HandlePreviewCmd(Worksheet sheet, string[] args) {
+			OpenPreview(sheet, false);
 			return true;
 		}
 
-		private bool HandleHMPreviewCmd(Job job, string[] args) {
-			OpenPreview(job, true);
+		private bool HandleHMPreviewCmd(Worksheet sheet, string[] args) {
+			OpenPreview(sheet, true);
 			return true;
 		}
 
-		private void OpenPreview(Job job, bool heightmap) {
+		private void OpenPreview(Worksheet sheet, bool heightmap) {
 			ConsoleOutput.WriteLine("Opening preview...");
-			Previewer.OpenDataPreview(job, heightmap);
+			Previewer.OpenDataPreview(sheet, heightmap);
 		}
 	}
 }
