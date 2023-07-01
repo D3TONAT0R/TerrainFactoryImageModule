@@ -4,7 +4,7 @@ using HMCon.Formats;
 
 namespace HMConImage.Formats
 {
-	public class HeightmapPNG8Format : AbstractHeightmapFormat
+	public class HeightmapPNG8Format : HeightmapFormatBase
 	{
 		public override string Identifier => "PNG";
 		public override string ReadableName => "PNG Heightmap (8 Bit)";

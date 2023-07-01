@@ -3,7 +3,7 @@ using HMCon.Formats;
 
 namespace HMConImage.Formats
 {
-	public class HeightmapJPGFormat : AbstractHeightmapFormat
+	public class HeightmapJPGFormat : HeightmapFormatBase
 	{
 		public override string Identifier => "JPG";
 		public override string ReadableName => "JPG Heightmap";

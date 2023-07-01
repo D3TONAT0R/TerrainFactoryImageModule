@@ -9,7 +9,7 @@ using System.Text;
 
 namespace HMConImage.Formats
 {
-	public abstract class AbstractHeightmapFormat : FileFormat
+	public abstract class HeightmapFormatBase : FileFormat
 	{
 
 		protected override HeightData ImportFile(string importPath, params string[] args)
