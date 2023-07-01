@@ -24,7 +24,7 @@ namespace HMConImage {
 
 			var data = sheet.ApplyModificationChain(sheet.CurrentData);
 
-			var exporter = new ImageGeneratorMagick(data, heightmap ? ImageType.Heightmap8 : ImageType.Hillshade, data.lowPoint, data.highPoint);
+			var exporter = new ImageGeneratorMagick(data, heightmap ? ImageType.Heightmap8 : ImageType.CombinedPreview, data.lowPoint, data.highPoint);
 			MakeGrid(exporter.GetImage(), data.offsetFromSource);
 			string path = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
 			exporter.WriteFile(path, ImageMagick.MagickFormat.Png24);

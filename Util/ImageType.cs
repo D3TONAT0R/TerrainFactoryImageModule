@@ -5,5 +5,6 @@ namespace HMConImage {
 		Heightmap16,
 		Normalmap,
 		Hillshade,
+		CombinedPreview
 	}
 }

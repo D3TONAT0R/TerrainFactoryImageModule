@@ -13,6 +13,13 @@ using System.Text;
 namespace HMConImage {
 	class ImageGeneratorMagick {
 
+		public enum BitDepth
+		{
+			Depth8,
+			Depth16,
+			Depth32
+		}
+
 		private MagickImage image;
 
 		ImageType imageType;
@@ -25,10 +32,11 @@ namespace HMConImage {
 			imageType = type;
 			lowValue = blackValue;
 			highValue = whiteValue;
-			if (type == ImageType.Heightmap8) MakeHeightmap(false);
-			else if (type == ImageType.Heightmap16) MakeHeightmap(true);
-			else if (type == ImageType.Normalmap) MakeNormalmap(false);
-			else if (type == ImageType.Hillshade) MakeHillshademap();
+			if(type == ImageType.Heightmap8) MakeHeightmap(false);
+			else if(type == ImageType.Heightmap16) MakeHeightmap(true);
+			else if(type == ImageType.Normalmap) MakeNormalmap(false);
+			else if(type == ImageType.Hillshade) MakeHillshademap();
+			else if(type == ImageType.CombinedPreview) MakeHillshademap(heightmapBlend: 0.5f);
 			else throw new NotImplementedException();
 		}
 
@@ -51,10 +59,15 @@ namespace HMConImage {
 			var pixels = image.GetPixels();
 			for(int x = 0; x < image.Width; x++) {
 				for(int y = 0; y < image.Height; y++) {
-					float v = MathUtils.Clamp01(MathUtils.InverseLerp(lowValue, highValue, data.GetHeightUnchecked(x,y)));
+					float v = GetHeightmapLuminance(x, y);
 					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
 				}
 			}
+		}
+
+		private float GetHeightmapLuminance(int x, int y)
+		{
+			return MathUtils.Clamp01(MathUtils.InverseLerp(lowValue, highValue, data.GetHeightUnchecked(x, y)));
 		}
 
 		private void MakeNormalmap(bool sharp)
@@ -82,12 +95,12 @@ namespace HMConImage {
 			}
 		}
 
-		private void MakeHillshademap(float intensity = 0.8f)
+		private void MakeHillshademap(float intensity = 0.8f, float heightmapBlend = 0f)
 		{
-			MakeHillshademap(60, 40, intensity);
+			MakeHillshademap(60, 40, intensity, heightmapBlend);
 		}
 
-		private void MakeHillshademap(float sunYawDegrees, float sunPitchDegrees, float intensity)
+		private void MakeHillshademap(float sunYawDegrees, float sunPitchDegrees, float intensity, float heightmapBlend)
 		{
 			var normals = NormalMapper.CalculateNormals(data, true);
 			image = CreateImage();
@@ -99,9 +112,14 @@ namespace HMConImage {
 				for (int y = 0; y < image.Height; y++)
 				{
 					Vector3 nrm = normals[x, y];
-					float illum = -Vector3.Dot(nrm, sunNormal);
-					illum = Math.Max(0, Math.Min(1, illum * 0.5f * intensity + 0.5f));
-					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(illum));
+					float luminance = -Vector3.Dot(nrm, sunNormal);
+					luminance = luminance * 0.5f * intensity + 0.5f;
+					if(heightmapBlend > 0)
+					{
+						float hmLuminance = GetHeightmapLuminance(x, y) * 1.6f;
+						luminance *= MathUtils.Lerp(1f, hmLuminance, heightmapBlend);
+					}
+					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(MathUtils.Clamp01(luminance)));
 				}
 			}
 		}
