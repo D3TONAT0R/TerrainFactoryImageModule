@@ -3,6 +3,7 @@ using HMCon;
 using HMCon.Import;
 using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Text;
 
 namespace HMConImage.Import
@@ -12,24 +13,60 @@ namespace HMConImage.Import
 
 		public static HeightData Import(string importPath, params string[] args)
 		{
+			Tiff.SetTagExtender(GeoTiffTagExtender);
 			using(var input = Tiff.Open(importPath, "r"))
 			{
 				int imgWidth = input.GetField(TiffTag.IMAGEWIDTH)[0].ToInt();
 				int imgHeight = input.GetField(TiffTag.IMAGELENGTH)[0].ToInt();
 				int depth = input.GetField(TiffTag.BITSPERSAMPLE)[0].ToInt() / 8;
 
-				float cellSize = 1f;
+				float cellSize;
 				var scaleTag = input.GetField(TiffTag.GEOTIFF_MODELPIXELSCALETAG);
 				if(scaleTag != null && scaleTag.Length > 0)
 				{
-					int tagLength = scaleTag[0].ToInt();
-					double[] scales = scaleTag[1].ToDoubleArray();
+					double[] scales = scaleTag[0].ToDoubleArray();
 					cellSize = (float)scales[0];
 				}
-				ConsoleOutput.WriteLine("cellSize: " + cellSize);
+				else
+				{
+					ConsoleOutput.WriteWarning("Pixel scale not defined, assuming scale of 1.0.");
+					cellSize = 1f;
+				}
 
-				var data = new HeightData(imgWidth, imgHeight, importPath);
-				data.cellSize = cellSize;
+				Vector2 lowerCornerCoordinate;
+				var tiepointData = input.GetField(TiffTag.GEOTIFF_MODELTIEPOINTTAG)?[0].ToDoubleArray();
+				if(tiepointData != null && tiepointData.Length > 0)
+				{
+					float pixelX = (float)tiepointData[0];
+					float pixelY = (float)tiepointData[1];
+					float coordX = (float)tiepointData[3];
+					float coordY = (float)tiepointData[4];
+					lowerCornerCoordinate = new Vector2(coordX, coordY);
+					lowerCornerCoordinate.X -= pixelX * cellSize;
+					lowerCornerCoordinate.Y -= pixelY * cellSize;
+				}
+				else
+				{
+					ConsoleOutput.WriteWarning("Coordinates not defined, assuming position of (0,0).");
+					lowerCornerCoordinate = Vector2.Zero;
+				}
+
+				float? nodataValue = null;
+				var nodataValueString = input.GetField((TiffTag)42113)?[0].ToString();
+				if(nodataValueString != null)
+				{
+					nodataValue = float.Parse(nodataValueString);
+				}
+
+				var data = new HeightData(imgWidth, imgHeight, importPath)
+				{
+					cellSize = cellSize,
+					lowerCornerPos = lowerCornerCoordinate
+				};
+				if(nodataValue.HasValue)
+				{
+					data.nodataValue = nodataValue.Value;
+				}
 
 				if(input.IsTiled())
 				{
@@ -84,6 +121,7 @@ namespace HMConImage.Import
 					}
 					*/
 				}
+				Tiff.SetTagExtender(null);
 
 				data.isValid = true;
 				data.RecalculateValues(true);
@@ -110,6 +148,23 @@ namespace HMConImage.Import
 
 				*/
 			}
+		}
+
+		public static void GeoTiffTagExtender(Tiff tif)
+		{
+			//short tiePointCount = (short)(tif.GetField(TiffTag.GEOTIFF_MODELTIEPOINTTAG)?[0].ToInt() ?? -1);
+			var fieldInfo = new TiffFieldInfo[]
+			{
+				new TiffFieldInfo((TiffTag)33550, 3, 3, TiffType.DOUBLE, FieldBit.Custom, true, false, "ModelPixelScaleTag"),
+				new TiffFieldInfo((TiffTag)33922, 6, 6, TiffType.DOUBLE, FieldBit.Custom, true, false, "ModelTiepointTag"),
+				new TiffFieldInfo((TiffTag)34735, -1, -1, TiffType.SHORT, FieldBit.Custom, true, false, "GeoKeyDirectoryTag"),
+				new TiffFieldInfo((TiffTag)34736, -1, -1, TiffType.DOUBLE, FieldBit.Custom, true, false, "GeoDoubleParamsTag"),
+				new TiffFieldInfo((TiffTag)34737, -1, -1, TiffType.ASCII, FieldBit.Custom, true, false, "GeoAsciiParamsTag"),
+
+				new TiffFieldInfo((TiffTag)42112, -1, -1, TiffType.ASCII, FieldBit.Custom, true, false, "GDAL_METADATA"),
+				new TiffFieldInfo((TiffTag)42113, -1, -1, TiffType.ASCII, FieldBit.Custom, true, false, "GDAL_NODATA")
+			};
+			tif.MergeFieldInfo(fieldInfo, fieldInfo.Length);
 		}
 	}
 }

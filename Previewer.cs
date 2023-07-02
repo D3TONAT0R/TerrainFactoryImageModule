@@ -45,7 +45,7 @@ namespace HMConImage {
 			}
 			int i = 0;
 			while(grids.Count > 0) {
-				float opacity = (float)Math.Pow(1f / grids.Count, 2);
+				float opacity = 1f;// (float)Math.Pow(1f / grids.Count, 2);
 				var (size, col) = grids.Dequeue();
 				DrawGrid(img, size, col, opacity, i == 0, offsetFromSource);
 				DrawGridLegend(img, size, col, i);

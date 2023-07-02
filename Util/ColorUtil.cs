@@ -45,14 +45,14 @@ namespace HMConImage
 			y = img.Height - y - 1;
 			if(x < 0 || x >= img.Width || y < 0 || y >= img.Height) return;
 			Color src = pixels.GetPixel(x, y).ToColor().ToColor();
-			pixels.SetPixel(x, y, ColorUtil.CreateColorUShort(Lerp(src, color, opacity)));
+			pixels.SetPixel(x, y, CreateColorUShort(Lerp(src, color, opacity)));
 		}
 
 		public static Color Lerp(Color ca, Color cb, float t)
 		{
-			byte r = (byte)(cb.R * t + ca.R * (1 - t));
-			byte g = (byte)(cb.G * t + ca.G * (1 - t));
-			byte b = (byte)(cb.B * t + ca.B * (1 - t));
+			byte r = (byte)(ca.R + (cb.R - ca.R) * t);
+			byte g = (byte)(ca.G + (cb.G - ca.G) * t);
+			byte b = (byte)(ca.B + (cb.B - ca.B) * t);
 			return Color.FromArgb(255, r, g, b);
 		}
 	}

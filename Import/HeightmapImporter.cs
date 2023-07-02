@@ -91,7 +91,7 @@ namespace HMConImage
 			ConsoleOutput.UpdateProgressBar(progString, 0.5f);
 			HeightData heightData = new HeightData(image.Width, image.Height, filepath);
 			heightData.cellSize = 1;
-			heightData.nodata_value = -9999;
+			heightData.nodataValue = -9999;
 
 			int width = image.Width;
 			int height = image.Height;
