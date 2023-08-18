@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Text;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 	public static class ColorUtil
 	{

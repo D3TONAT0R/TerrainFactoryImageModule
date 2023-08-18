@@ -1,10 +1,10 @@
-﻿using HMCon;
-using HMConImage.Import;
+﻿using TerrainFactory;
+using TerrainFactory.Modules.Images.Import;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HMConImage.Formats
+namespace TerrainFactory.Modules.Images.Formats
 {
 	public class HeightmapGeoTIFFFormat : HeightmapFormatBase
 	{

@@ -1,9 +1,9 @@
-using HMCon;
-using HMConImage;
+using TerrainFactory;
+using TerrainFactory.Modules.Images;
 using ImageMagick;
 using System.Drawing;
 
-namespace HMConImage {
+namespace TerrainFactory.Modules.Images {
 	public static class PixelFont {
 
 		public static void DrawString(MagickImage img, string str, ref int x, ref int y, Color color, float opacity) {

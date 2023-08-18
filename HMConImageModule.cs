@@ -1,15 +1,15 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMCon.Import;
-using HMConImage.Formats;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Import;
+using TerrainFactory.Modules.Images.Formats;
 using System;
 using System.Collections.Generic;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 
-	public class HMConImageModule : HMConModule
+	public class TerrainFactoryImageModule : TerrainFactoryModule
 	{
 		public override string ModuleID => "ImageModule";
 		public override string ModuleName => "Image Importer/Exporter";

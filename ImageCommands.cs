@@ -1,11 +1,11 @@
-﻿using HMCon;
-using HMCon.Commands;
-using HMCon.Export;
+﻿using TerrainFactory;
+using TerrainFactory.Commands;
+using TerrainFactory.Export;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 	public static class ImageCommands
 	{

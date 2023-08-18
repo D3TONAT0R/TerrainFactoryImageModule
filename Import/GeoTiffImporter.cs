@@ -1,12 +1,12 @@
 ﻿using BitMiracle.LibTiff.Classic;
-using HMCon;
-using HMCon.Import;
+using TerrainFactory;
+using TerrainFactory.Import;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace HMConImage.Import
+namespace TerrainFactory.Modules.Images.Import
 {
 	public static class GeoTiffImporter
 	{

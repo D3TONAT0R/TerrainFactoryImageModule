@@ -1,9 +1,9 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMCon.Util;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Util;
 
-namespace HMConImage.Formats
+namespace TerrainFactory.Modules.Images.Formats
 {
 	public class HillshadePNGFormat : FileFormat
 	{

@@ -2,8 +2,8 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>HMConImage</RootNamespace>
-    <AssemblyName>HMConImageModule</AssemblyName>
+    <RootNamespace>TerrainFactory.Modules.Images</RootNamespace>
+    <AssemblyName>TerrainFactoryImageModule</AssemblyName>
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
 
@@ -16,14 +16,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\HMCon\HMCon.csproj">
+    <ProjectReference Include="..\TerrainFactory\TerrainFactory.csproj">
       <Private>false</Private>
       <ExcludeAssets>runtime</ExcludeAssets>
     </ProjectReference>
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="call $(SolutionDir)\HMCon\copy_modules.bat $(TargetDir) $(SolutionDir) $(Configuration) $(ProjectName)" />
+    <Exec Command="call $(SolutionDir)\$(SolutionName)\copy_modules.bat $(TargetDir) $(SolutionDir) $(Configuration) $(ProjectName)" />
   </Target>
 
 </Project>

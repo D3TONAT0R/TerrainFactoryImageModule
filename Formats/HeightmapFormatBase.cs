@@ -1,13 +1,13 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMCon.Util;
-using HMConImage;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Util;
+using TerrainFactory.Modules.Images;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace HMConImage.Formats
+namespace TerrainFactory.Modules.Images.Formats
 {
 	public abstract class HeightmapFormatBase : FileFormat
 	{

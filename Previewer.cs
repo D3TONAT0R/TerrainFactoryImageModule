@@ -1,7 +1,7 @@
-using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMConImage.Formats;
+using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Modules.Images.Formats;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
@@ -9,7 +9,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 
-namespace HMConImage {
+namespace TerrainFactory.Modules.Images {
 	public class Previewer {
 
 		public static readonly (int size, Color col)[] allGrids = new (int, Color)[] {

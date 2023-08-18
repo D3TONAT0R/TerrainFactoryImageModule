@@ -1,7 +1,7 @@
-﻿using HMCon;
-using HMCon.Formats;
+﻿using TerrainFactory;
+using TerrainFactory.Formats;
 
-namespace HMConImage.Formats
+namespace TerrainFactory.Modules.Images.Formats
 {
 	public class HeightmapJPGFormat : HeightmapFormatBase
 	{

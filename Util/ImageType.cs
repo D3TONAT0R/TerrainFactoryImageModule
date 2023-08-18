@@ -1,4 +1,4 @@
-namespace HMConImage {
+namespace TerrainFactory.Modules.Images {
 	public enum ImageType {
 
 		Heightmap8,

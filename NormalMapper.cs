@@ -1,10 +1,10 @@
-﻿using HMCon;
+﻿using TerrainFactory;
 using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 	public static class NormalMapper
 	{

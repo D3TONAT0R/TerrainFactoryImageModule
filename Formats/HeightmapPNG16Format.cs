@@ -1,8 +1,8 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
 
-namespace HMConImage.Formats
+namespace TerrainFactory.Modules.Images.Formats
 {
 	public class HeightmapPNG16Format : HeightmapFormatBase
 	{

@@ -1,7 +1,7 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMCon.Util;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Util;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
@@ -12,7 +12,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 	public static class ImageExporter
 	{

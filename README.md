@@ -1,2 +1,2 @@
-# HMConImageModule
- HeightmapConverter (HMCon) Image Generator / Impoter Module
+# TerrainFactoryImageModule
+ TerrainFactory Image Generator / Impoter Module

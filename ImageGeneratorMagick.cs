@@ -1,6 +1,6 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
@@ -10,7 +10,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 
-namespace HMConImage {
+namespace TerrainFactory.Modules.Images {
 	class ImageGeneratorMagick {
 
 		public enum BitDepth

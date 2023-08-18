@@ -1,8 +1,8 @@
-﻿using HMCon;
-using HMCon.Export;
-using HMCon.Formats;
-using HMCon.Import;
-using HMCon.Util;
+﻿using TerrainFactory;
+using TerrainFactory.Export;
+using TerrainFactory.Formats;
+using TerrainFactory.Import;
+using TerrainFactory.Util;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HMConImage
+namespace TerrainFactory.Modules.Images
 {
 	public static class HeightmapImporter
 	{
