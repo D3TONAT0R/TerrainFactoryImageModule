@@ -11,21 +11,21 @@ namespace TerrainFactory.Modules.Images
 
 		const double Rad2Deg = 180f / Math.PI;
 
-		public static Vector3[,] CalculateNormals(HeightData grid, bool sharpMode)
+		public static Vector3[,] CalculateNormals(ElevationData grid, bool sharpMode)
 		{
 			if (sharpMode)
 			{
-				var normals = new Vector3[grid.GridLengthX, grid.GridLengthY];
-				for (int x = 0; x < grid.GridLengthX - 1; x++)
+				var normals = new Vector3[grid.CellCountX, grid.CellCountY];
+				for (int x = 0; x < grid.CellCountX - 1; x++)
 				{
-					for (int y = 0; y < grid.GridLengthY - 1; y++)
+					for (int y = 0; y < grid.CellCountY - 1; y++)
 					{
-						float ll = grid.GetHeightBounded(x, y);
-						float lr = grid.GetHeightBounded(x + 1, y);
-						float ul = grid.GetHeightBounded(x, y + 1);
-						float ur = grid.GetHeightBounded(x + 1, y + 1);
-						float nrmX = (GetSlope(lr, ll, grid.cellSize) + GetSlope(ur, ul, grid.cellSize)) / 2f;
-						float nrmY = (GetSlope(ul, ll, grid.cellSize) + GetSlope(ur, lr, grid.cellSize)) / 2f;
+						float ll = grid.GetElevationAtCellClamped(x, y);
+						float lr = grid.GetElevationAtCellClamped(x + 1, y);
+						float ul = grid.GetElevationAtCellClamped(x, y + 1);
+						float ur = grid.GetElevationAtCellClamped(x + 1, y + 1);
+						float nrmX = (GetSlope(lr, ll, grid.CellSize) + GetSlope(ur, ul, grid.CellSize)) / 2f;
+						float nrmY = (GetSlope(ul, ll, grid.CellSize) + GetSlope(ur, lr, grid.CellSize)) / 2f;
 						float power = Math.Abs(nrmX) + Math.Abs(nrmY);
 						if (power > 1)
 						{
@@ -40,16 +40,16 @@ namespace TerrainFactory.Modules.Images
 			}
 			else
 			{
-				var normals = new Vector3[grid.GridLengthX, grid.GridLengthY];
-				for (int x = 0; x < grid.GridLengthX; x++)
+				var normals = new Vector3[grid.CellCountX, grid.CellCountY];
+				for (int x = 0; x < grid.CellCountX; x++)
 				{
-					for (int y = 0; y < grid.GridLengthY; y++)
+					for (int y = 0; y < grid.CellCountY; y++)
 					{
-						float m = grid.GetHeightBounded(x, y);
-						float r = GetSlope(grid.GetHeightBounded(x + 1, y), m, grid.cellSize);
-						float l = GetSlope(m, grid.GetHeightBounded(x - 1, y), grid.cellSize);
-						float u = GetSlope(grid.GetHeightBounded(x, y + 1), m, grid.cellSize);
-						float d = GetSlope(m, grid.GetHeightBounded(x, y - 1), grid.cellSize);
+						float m = grid.GetElevationAtCellClamped(x, y);
+						float r = GetSlope(grid.GetElevationAtCellClamped(x + 1, y), m, grid.CellSize);
+						float l = GetSlope(m, grid.GetElevationAtCellClamped(x - 1, y), grid.CellSize);
+						float u = GetSlope(grid.GetElevationAtCellClamped(x, y + 1), m, grid.CellSize);
+						float d = GetSlope(m, grid.GetElevationAtCellClamped(x, y - 1), grid.CellSize);
 						float nrmX = (r + l) / 2f;
 						float nrmY = (u + d) / 2f;
 						float power = Math.Abs(nrmX) + Math.Abs(nrmY);

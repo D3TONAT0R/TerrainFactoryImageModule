@@ -11,7 +11,7 @@ namespace TerrainFactory.Modules.Images.Import
 	public static class GeoTiffImporter
 	{
 
-		public static HeightData Import(string importPath, params string[] args)
+		public static ElevationData Import(string importPath, params string[] args)
 		{
 			Tiff.SetTagExtender(GeoTiffTagExtender);
 			using(var input = Tiff.Open(importPath, "r"))
@@ -58,14 +58,14 @@ namespace TerrainFactory.Modules.Images.Import
 					nodataValue = float.Parse(nodataValueString);
 				}
 
-				var data = new HeightData(imgWidth, imgHeight, importPath)
+				var data = new ElevationData(imgWidth, imgHeight, importPath)
 				{
-					cellSize = cellSize,
-					lowerCornerPos = lowerCornerCoordinate
+					CellSize = cellSize,
+					LowerCornerPosition = lowerCornerCoordinate
 				};
 				if(nodataValue.HasValue)
 				{
-					data.nodataValue = nodataValue.Value;
+					data.NoDataValue = nodataValue.Value;
 				}
 
 				if(input.IsTiled())
@@ -105,7 +105,7 @@ namespace TerrainFactory.Modules.Images.Import
 									{
 										throw new NotImplementedException();
 									}
-									data.SetHeight(xMin + x, (imgHeight - 1) - (yMin + y), height);
+									data.SetHeightAt(xMin + x, (imgHeight - 1) - (yMin + y), height);
 								}
 							}
 						}
@@ -123,8 +123,7 @@ namespace TerrainFactory.Modules.Images.Import
 				}
 				Tiff.SetTagExtender(null);
 
-				data.isValid = true;
-				data.RecalculateValues(true);
+				data.RecalculateElevationRange(true);
 				return data;
 
 				/*

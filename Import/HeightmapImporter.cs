@@ -28,7 +28,7 @@ namespace TerrainFactory.Modules.Images
 			CombinedBrightness
 		}
 
-		public static HeightData Import(string importPath, params string[] args)
+		public static ElevationData Import(string importPath, params string[] args)
 		{
 			ColorChannel? channel = null;
 			if (args.TryGetArgument("channel", out string v))
@@ -50,48 +50,48 @@ namespace TerrainFactory.Modules.Images
 			}
 		}
 
-		public static HeightData ImportHeightmap(string filepath, float low, float high, ColorChannel channel = ColorChannel.CombinedBrightness)
+		public static ElevationData ImportHeightmap(string filepath, float? low, float? high, ColorChannel channel = ColorChannel.CombinedBrightness)
 		{
 			return ImportHeightmap(filepath,
-				(HeightData d, int x, int y, Color c) =>
+				(ElevationData d, int x, int y, Color c) =>
 				{
-					d.SetHeight(x, y, GetValue(c, channel));
+					d.SetHeightAt(x, y, GetValue(c, channel));
 				},
-				(HeightData d) =>
+				(ElevationData d) =>
 				{
-					d.RecalculateValues(false);
-					d.lowPoint = low;
-					d.highPoint = high;
+					d.RecalculateElevationRange(false);
+					d.OverrideLowPoint = low;
+					d.OverrideHighPoint = high;
 				}
 			);
 		}
 
-		public static HeightData ImportHeightmap256(string filepath, ColorChannel channel = ColorChannel.CombinedBrightness)
+		public static ElevationData ImportHeightmap256(string filepath, ColorChannel channel = ColorChannel.CombinedBrightness)
 		{
 			return ImportHeightmap(filepath,
-				(HeightData d, int x, int y, Color c) =>
+				(ElevationData d, int x, int y, Color c) =>
 				{
-					d.SetHeight(x, y, GetValueRaw(c, channel));
+					d.SetHeightAt(x, y, GetValueRaw(c, channel));
 				},
-				(HeightData d) =>
+				(ElevationData d) =>
 				{
-					d.RecalculateValues(false);
-					d.lowPoint = 0;
-					d.highPoint = 255;
+					d.RecalculateElevationRange(false);
+					d.OverrideLowPoint = 0;
+					d.OverrideHighPoint = 255;
 				}
 			);
 		}
 
-		private static HeightData ImportHeightmap(string filepath, Action<HeightData, int, int, Color> iterator, Action<HeightData> finalizer)
+		private static ElevationData ImportHeightmap(string filepath, Action<ElevationData, int, int, Color> iterator, Action<ElevationData> finalizer)
 		{
 			ConsoleOutput.UpdateProgressBar(progString, 0);
 			FileStream stream = File.Open(filepath, FileMode.Open);
 			var image = new Bitmap(stream);
 			stream.Dispose();
 			ConsoleOutput.UpdateProgressBar(progString, 0.5f);
-			HeightData heightData = new HeightData(image.Width, image.Height, filepath);
-			heightData.cellSize = 1;
-			heightData.nodataValue = -9999;
+			ElevationData heightData = new ElevationData(image.Width, image.Height, filepath);
+			heightData.CellSize = 1;
+			heightData.NoDataValue = -9999;
 
 			int width = image.Width;
 			int height = image.Height;
@@ -121,7 +121,6 @@ namespace TerrainFactory.Modules.Images
 
 			finalizer(heightData);
 
-			heightData.isValid = true;
 			return heightData;
 		}
 

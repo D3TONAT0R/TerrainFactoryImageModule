@@ -15,7 +15,7 @@ namespace TerrainFactory.Modules.Images.Formats
 		public override string Extension => "tif";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Import;
 
-		protected override HeightData ImportFile(string importPath, params string[] args)
+		protected override ElevationData ImportFile(string importPath, params string[] args)
 		{
 			return GeoTiffImporter.Import(importPath, args);
 		}

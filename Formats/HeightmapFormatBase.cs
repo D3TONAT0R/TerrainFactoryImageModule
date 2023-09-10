@@ -12,7 +12,7 @@ namespace TerrainFactory.Modules.Images.Formats
 	public abstract class HeightmapFormatBase : FileFormat
 	{
 
-		protected override HeightData ImportFile(string importPath, params string[] args)
+		protected override ElevationData ImportFile(string importPath, params string[] args)
 		{
 			return HeightmapImporter.Import(importPath, args);
 		}

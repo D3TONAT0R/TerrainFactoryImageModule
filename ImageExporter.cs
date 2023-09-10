@@ -17,12 +17,12 @@ namespace TerrainFactory.Modules.Images
 	public static class ImageExporter
 	{
 
-		public static Bitmap GenerateCompositeMap(HeightData data, Bitmap baseMap, float heightmapIntensity, float hillshadeIntensity)
+		public static Bitmap GenerateCompositeMap(ElevationData data, Bitmap baseMap, float heightmapIntensity, float hillshadeIntensity)
 		{
 			Bitmap result;
 			if (baseMap == null)
 			{
-				result = new Bitmap(data.GridLengthX, data.GridLengthY);
+				result = new Bitmap(data.CellCountX, data.CellCountY);
 				var graphics = Graphics.FromImage(result);
 				graphics.FillRectangle(new SolidBrush(Color.Gray), new Rectangle(0, 0, baseMap.Width, baseMap.Height));
 			}
@@ -32,12 +32,12 @@ namespace TerrainFactory.Modules.Images
 			}
 			if (heightmapIntensity > 0)
 			{
-				var hm = new ImageGeneratorMagick(data, ImageType.Heightmap8, data.lowPoint, data.highPoint).GetImageAsBitmap();
+				var hm = new ImageGeneratorMagick(data, ImageType.Heightmap8, data.LowPoint, data.HighPoint).GetImageAsBitmap();
 				result = OverlayBlend(result, hm, heightmapIntensity);
 			}
 			if (hillshadeIntensity > 0)
 			{
-				var hs = new ImageGeneratorMagick(data, ImageType.Hillshade, data.lowPoint, data.highPoint).GetImageAsBitmap();
+				var hs = new ImageGeneratorMagick(data, ImageType.Hillshade, data.LowPoint, data.HighPoint).GetImageAsBitmap();
 				result = OverlayBlend(result, hs, hillshadeIntensity);
 			}
 			return result;

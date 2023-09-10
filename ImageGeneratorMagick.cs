@@ -23,11 +23,11 @@ namespace TerrainFactory.Modules.Images {
 		private MagickImage image;
 
 		ImageType imageType;
-		HeightData data;
+		ElevationData data;
 		float lowValue;
 		float highValue;
 
-		public ImageGeneratorMagick(HeightData heightData, ImageType type, float blackValue, float whiteValue) {
+		public ImageGeneratorMagick(ElevationData heightData, ImageType type, float blackValue, float whiteValue) {
 			data = heightData;
 			imageType = type;
 			lowValue = blackValue;
@@ -67,7 +67,7 @@ namespace TerrainFactory.Modules.Images {
 
 		private float GetHeightmapLuminance(int x, int y)
 		{
-			return MathUtils.Clamp01(MathUtils.InverseLerp(lowValue, highValue, data.GetHeightUnchecked(x, y)));
+			return MathUtils.Clamp01(MathUtils.InverseLerp(lowValue, highValue, data.GetElevationAtCellUnchecked(x, y)));
 		}
 
 		private void MakeNormalmap(bool sharp)
@@ -148,7 +148,7 @@ namespace TerrainFactory.Modules.Images {
 
 		private MagickImage CreateImage(int sizeOffset = 0, MagickFormat format = MagickFormat.Png24)
 		{
-			return CreateImage(data.GridLengthX + sizeOffset, data.GridLengthY + sizeOffset, format);
+			return CreateImage(data.CellCountX + sizeOffset, data.CellCountY + sizeOffset, format);
 		}
 	}
 }

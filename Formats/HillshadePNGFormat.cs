@@ -16,7 +16,7 @@ namespace TerrainFactory.Modules.Images.Formats
 
 		protected override bool ExportFile(string path, ExportTask task)
 		{
-			var gen = new ImageGeneratorMagick(task.data, ImageType.Hillshade, task.data.lowPoint, task.data.highPoint);
+			var gen = new ImageGeneratorMagick(task.data, ImageType.Hillshade, task.data.LowPoint, task.data.HighPoint);
 			gen.WriteFile(path, ImageMagick.MagickFormat.Png24);
 			return true;
 		}
