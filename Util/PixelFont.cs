@@ -15,7 +15,7 @@ namespace TerrainFactory.Modules.Images {
 			}
 		}
 
-		public static void DrawChar(MagickImage img, IPixelCollection<ushort> pixels, char c, ref int x, ref int y, Color color, float opacity) {
+		public static void DrawChar(MagickImage img, IPixelCollection<float> pixels, char c, ref int x, ref int y, Color color, float opacity) {
 			bool[,] map = GetCharPixels(c);
 			for(int i = 0; i < map.GetLength(0); i++) {
 				for(int j = 0; j < map.GetLength(1); j++) {

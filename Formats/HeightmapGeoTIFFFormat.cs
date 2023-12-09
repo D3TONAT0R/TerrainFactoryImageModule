@@ -17,7 +17,7 @@ namespace TerrainFactory.Modules.Images.Formats
 
 		protected override ElevationData ImportFile(string importPath, params string[] args)
 		{
-			return GeoTiffImporter.Import(importPath, args);
+			return MagickGeoTiffImporter.Import(importPath, args);
 		}
 	}
 }

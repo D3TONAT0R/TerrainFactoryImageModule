@@ -8,7 +8,7 @@ using System.Text;
 
 namespace TerrainFactory.Modules.Images.Import
 {
-	public static class GeoTiffImporter
+	public static class LibTiffGeoTiffImporter
 	{
 
 		public static ElevationData Import(string importPath, params string[] args)
