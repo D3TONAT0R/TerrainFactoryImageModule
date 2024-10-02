@@ -15,20 +15,16 @@ namespace TerrainFactory.Modules.Bitmaps
 		public override string ModuleName => "Image Importer/Exporter";
 		public override string ModuleVersion => "1.0";
 
-		public override void RegisterFormats(List<FileFormat> registry)
+		public override void Initialize()
 		{
-			registry.Add(new HeightmapPNG8Format());
-			registry.Add(new HeightmapPNG16Format());
-			registry.Add(new HeightmapJPGFormat());
-			//registry.Add(new HeightmapTIFFFormat());
-			registry.Add(new NormalPNGFormat());
-			registry.Add(new HillshadePNGFormat());
-			registry.Add(new HeightmapGeoTIFFFormat());
-		}
-
-		public override IEnumerable<Type> GetCommandDefiningTypes()
-		{
-			yield return typeof(ImageCommands);
+			SupportedFormats.Add(new HeightmapPNG8Format());
+			SupportedFormats.Add(new HeightmapPNG16Format());
+			SupportedFormats.Add(new HeightmapJPGFormat());
+			//SupportedFormats.Add(new HeightmapTIFFFormat());
+			SupportedFormats.Add(new NormalPNGFormat());
+			SupportedFormats.Add(new HillshadePNGFormat());
+			SupportedFormats.Add(new HeightmapGeoTIFFFormat());
+			CommandDefiningTypes.Add(typeof(ImageCommands));
 		}
 	}
 }
