@@ -1,10 +1,10 @@
 ﻿using TerrainFactory;
-using TerrainFactory.Modules.Images.Import;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using TerrainFactory.Modules.Bitmaps.Import;
 
-namespace TerrainFactory.Modules.Images.Formats
+namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public class HeightmapGeoTIFFFormat : HeightmapFormatBase
 	{

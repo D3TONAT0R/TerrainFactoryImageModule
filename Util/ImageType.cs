@@ -1,4 +1,4 @@
-namespace TerrainFactory.Modules.Images {
+namespace TerrainFactory.Modules.Bitmaps {
 	public enum ImageType {
 
 		Heightmap8,

@@ -1,7 +1,7 @@
 ﻿using TerrainFactory.Formats;
 
 
-namespace TerrainFactory.Modules.Images.Formats
+namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	/*
 	public class HeightmapTIFFFormat : HeightmapFormatBase

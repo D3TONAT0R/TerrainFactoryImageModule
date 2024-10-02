@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
 
-namespace TerrainFactory.Modules.Images
+namespace TerrainFactory.Modules.Bitmaps
 {
 	public static class NormalMapper
 	{

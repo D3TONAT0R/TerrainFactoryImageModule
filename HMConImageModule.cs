@@ -2,11 +2,11 @@
 using TerrainFactory.Export;
 using TerrainFactory.Formats;
 using TerrainFactory.Import;
-using TerrainFactory.Modules.Images.Formats;
 using System;
 using System.Collections.Generic;
+using TerrainFactory.Modules.Bitmaps.Formats;
 
-namespace TerrainFactory.Modules.Images
+namespace TerrainFactory.Modules.Bitmaps
 {
 
 	public class TerrainFactoryImageModule : TerrainFactoryModule

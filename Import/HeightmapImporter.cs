@@ -12,7 +12,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace TerrainFactory.Modules.Images
+namespace TerrainFactory.Modules.Bitmaps
 {
 	public static class HeightmapImporter
 	{

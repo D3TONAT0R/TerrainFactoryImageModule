@@ -2,7 +2,7 @@
 using TerrainFactory.Export;
 using TerrainFactory.Formats;
 
-namespace TerrainFactory.Modules.Images.Formats
+namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public class HeightmapPNG16Format : HeightmapFormatBase
 	{

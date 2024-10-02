@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TerrainFactory.Modules.Images
+namespace TerrainFactory.Modules.Bitmaps
 {
 	public static class ImageCommands
 	{

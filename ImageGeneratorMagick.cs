@@ -10,7 +10,7 @@ using System.IO;
 using System.Numerics;
 using System.Text;
 
-namespace TerrainFactory.Modules.Images {
+namespace TerrainFactory.Modules.Bitmaps {
 	class ImageGeneratorMagick {
 
 		public enum BitDepth

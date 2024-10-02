@@ -3,7 +3,7 @@ using System.Numerics;
 using System.Threading.Tasks;
 using ImageMagick;
 
-namespace TerrainFactory.Modules.Images.Import
+namespace TerrainFactory.Modules.Bitmaps.Import
 {
 	public static class MagickGeoTiffImporter
 	{

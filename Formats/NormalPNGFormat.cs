@@ -3,7 +3,7 @@ using TerrainFactory.Export;
 using TerrainFactory.Formats;
 using TerrainFactory.Util;
 
-namespace TerrainFactory.Modules.Images.Formats
+namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public class NormalPNGFormat : FileFormat
 	{

@@ -1,9 +1,9 @@
 using TerrainFactory;
-using TerrainFactory.Modules.Images;
+using TerrainFactory.Modules.Bitmaps;
 using ImageMagick;
 using System.Drawing;
 
-namespace TerrainFactory.Modules.Images {
+namespace TerrainFactory.Modules.Bitmaps {
 	public static class PixelFont {
 
 		public static void DrawString(MagickImage img, string str, ref int x, ref int y, Color color, float opacity) {

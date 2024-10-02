@@ -2,12 +2,12 @@
 using TerrainFactory.Export;
 using TerrainFactory.Formats;
 using TerrainFactory.Util;
-using TerrainFactory.Modules.Images;
+using TerrainFactory.Modules.Bitmaps;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace TerrainFactory.Modules.Images.Formats
+namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public abstract class HeightmapFormatBase : FileFormat
 	{
