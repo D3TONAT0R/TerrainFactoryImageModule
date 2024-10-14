@@ -20,7 +20,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 			(1000,Color.Yellow),
 		};
 
-		public static void OpenDataPreview(Worksheet sheet, bool heightmap) {
+		public static void OpenDataPreview(Project sheet, bool heightmap) {
 
 			var data = sheet.ApplyModificationChain(sheet.CurrentData);
 
