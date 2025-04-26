@@ -1,16 +1,9 @@
-﻿using TerrainFactory;
-using TerrainFactory.Export;
-using TerrainFactory.Formats;
-using TerrainFactory.Import;
-using TerrainFactory.Util;
+﻿using TerrainFactory.Util;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading.Tasks;
+using ImageMagick;
 
 namespace TerrainFactory.Modules.Bitmaps
 {
@@ -53,7 +46,7 @@ namespace TerrainFactory.Modules.Bitmaps
 		public static ElevationData ImportHeightmap(string filepath, float? low, float? high, ColorChannel channel = ColorChannel.CombinedBrightness)
 		{
 			return ImportHeightmap(filepath,
-				(ElevationData d, int x, int y, Color c) =>
+				(ElevationData d, int x, int y, IMagickColor<float> c) =>
 				{
 					d.SetHeightAt(x, y, GetValue(c, channel));
 				},
@@ -69,7 +62,7 @@ namespace TerrainFactory.Modules.Bitmaps
 		public static ElevationData ImportHeightmap256(string filepath, ColorChannel channel = ColorChannel.CombinedBrightness)
 		{
 			return ImportHeightmap(filepath,
-				(ElevationData d, int x, int y, Color c) =>
+				(ElevationData d, int x, int y, IMagickColor<float> c) =>
 				{
 					d.SetHeightAt(x, y, GetValueRaw(c, channel));
 				},
@@ -82,11 +75,11 @@ namespace TerrainFactory.Modules.Bitmaps
 			);
 		}
 
-		private static ElevationData ImportHeightmap(string filepath, Action<ElevationData, int, int, Color> iterator, Action<ElevationData> finalizer)
+		private static ElevationData ImportHeightmap(string filepath, Action<ElevationData, int, int, IMagickColor<float>> iterator, Action<ElevationData> finalizer)
 		{
 			ConsoleOutput.UpdateProgressBar(progString, 0);
 			FileStream stream = File.Open(filepath, FileMode.Open);
-			var image = new Bitmap(stream);
+			var image = new MagickImage(stream);
 			stream.Dispose();
 			ConsoleOutput.UpdateProgressBar(progString, 0.5f);
 			ElevationData heightData = new ElevationData(image.Width, image.Height, filepath);
@@ -96,11 +89,7 @@ namespace TerrainFactory.Modules.Bitmaps
 			int width = image.Width;
 			int height = image.Height;
 			int depth = 4;
-			var rect = new Rectangle(0, 0, width, height);
-			var data = image.LockBits(rect, System.Drawing.Imaging.ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppArgb);
-			var byteBuffer = new byte[height * width * depth];
-			Marshal.Copy(data.Scan0, byteBuffer, 0, byteBuffer.Length);
-			image.Dispose();
+			var pixels = image.GetPixels();
 
 			int progress = 0;
 
@@ -108,8 +97,7 @@ namespace TerrainFactory.Modules.Bitmaps
 			{
 				for (int y = 0; y < height; y++)
 				{
-					Color c = GetPixel(byteBuffer, x, y, width, height, depth);
-					//Color c = image.GetPixel(x, image.Height - y - 1);
+					var c = pixels.GetPixel(x, y).ToColor();
 					iterator(heightData, x, y, c);
 				}
 				progress++;
@@ -124,36 +112,48 @@ namespace TerrainFactory.Modules.Bitmaps
 			return heightData;
 		}
 
-		static Color GetPixel(byte[] byteBuffer, int x, int y, int width, int height, int depth)
-		{
-			int by = height - y - 1;
-			int pos = (by * width + x) * depth;
-
-			var b = byteBuffer[pos + 0];
-			var g = byteBuffer[pos + 1];
-			var r = byteBuffer[pos + 2];
-			var a = depth > 3 ? byteBuffer[pos + 3] : (byte)255;
-
-			return Color.FromArgb(a, r, g, b);
-		}
-
 		public static byte[,] ImportHeightmapRaw(string filepath, int offsetX, int offsetY, int width, int height, ColorChannel channel = ColorChannel.Red)
 		{
 			FileStream stream = File.Open(filepath, FileMode.Open);
-			var image = new Bitmap(stream);
+			var image = new MagickImage(stream);
+			var pixels = image.GetPixels();
 			byte[,] arr = new byte[width, height];
 			for (int x = 0; x < width; x++)
 			{
 				for (int y = 0; y < height; y++)
 				{
-					Color c = image.GetPixel(offsetX + x, offsetY + y);
+					var c = pixels.GetPixel(offsetX + x, offsetY + y).ToColor();
 					arr[x, height - 1 - y] = GetValueRaw(c, channel);
 				}
 			}
 			return arr;
 		}
 
-		public static byte GetValueRaw(Color c, ColorChannel channel)
+		public static byte GetValueRaw(IMagickColor<float> c, ColorChannel channel)
+		{
+			if (channel == ColorChannel.Red)
+			{
+				return (byte)(c.R * 255);
+			}
+			else if (channel == ColorChannel.Green)
+			{
+				return (byte)(c.G * 255);
+			}
+			else if (channel == ColorChannel.Blue)
+			{
+				return (byte)(c.B * 255);
+			}
+			else if (channel == ColorChannel.Alpha)
+			{
+				return (byte)(c.A * 255);
+			}
+			else
+			{
+				return (byte)(c.R * 255);
+			}
+		}
+
+		public static float GetValue(IMagickColor<float> c, ColorChannel channel)
 		{
 			if (channel == ColorChannel.Red)
 			{
@@ -173,31 +173,7 @@ namespace TerrainFactory.Modules.Bitmaps
 			}
 			else
 			{
-				return (byte)Math.Round(c.GetBrightness() * 255);
-			}
-		}
-
-		public static float GetValue(Color c, ColorChannel channel)
-		{
-			if (channel == ColorChannel.Red)
-			{
-				return c.R / 255f;
-			}
-			else if (channel == ColorChannel.Green)
-			{
-				return c.G / 255f;
-			}
-			else if (channel == ColorChannel.Blue)
-			{
-				return c.B / 255f;
-			}
-			else if (channel == ColorChannel.Alpha)
-			{
-				return c.A / 255f;
-			}
-			else
-			{
-				return c.GetBrightness();
+				return c.R;
 			}
 		}
 	}

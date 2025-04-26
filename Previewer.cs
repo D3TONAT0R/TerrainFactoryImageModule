@@ -1,31 +1,28 @@
-using TerrainFactory;
-using TerrainFactory.Export;
-using TerrainFactory.Formats;
-using TerrainFactory.Modules.Bitmaps.Formats;
 using ImageMagick;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Drawing;
 using System.IO;
 
-namespace TerrainFactory.Modules.Bitmaps {
+namespace TerrainFactory.Modules.Bitmaps
+{
 	public class Previewer {
 
-		public static readonly (int size, Color col)[] allGrids = new (int, Color)[] {
-			(10,Color.Black),
-			(50,Color.DarkCyan),
-			(100,Color.DarkBlue),
-			(500,Color.DarkGreen),
-			(1000,Color.Yellow),
+		public static readonly (int size, MagickColor col)[] allGrids = new (int, MagickColor)[] {
+			(10,MagickColors.Black),
+			(50,MagickColors.DarkCyan),
+			(100,MagickColors.DarkBlue),
+			(500,MagickColors.DarkGreen),
+			(1000,MagickColors.Yellow),
 		};
 
 		public static void OpenDataPreview(Project sheet, bool heightmap) {
 
-			var data = sheet.ApplyModificationChain(sheet.CurrentData);
+			sheet.InputData.LoadIfRequired();
+			var data = sheet.ApplyModificationChain(sheet.InputData.Current);
 
 			var exporter = new ImageGeneratorMagick(data, heightmap ? ImageType.Heightmap8 : ImageType.CombinedPreview, data.LowPoint, data.HighPoint);
-			MakeGrid(exporter.GetImage(), data.offsetFromSource);
+			MakeGrid(exporter.Image, data.offsetFromSource);
 			string path = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
 			exporter.WriteFile(path, ImageMagick.MagickFormat.Png24);
 			var p = new Process {
@@ -39,7 +36,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 		private static void MakeGrid(MagickImage img, (int x, int y) offsetFromSource) {
 			int dim = MinDim(img);
 			if(dim < 50) return;
-			Queue<(int size, Color col)> grids = new Queue<(int size, Color col)>();
+			Queue<(int size, MagickColor col)> grids = new Queue<(int size, MagickColor col)>();
 			foreach(var g in allGrids) {
 				if(Range(dim, g.size * 2, g.size * 20)) grids.Enqueue(g);
 			}
@@ -57,7 +54,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 			return i >= min && i < max;
 		}
 
-		private static void DrawGrid(MagickImage img, int size, Color color, float opacity, bool drawCoords, (int x, int y) offsetFromSource) {
+		private static void DrawGrid(MagickImage img, int size, MagickColor color, float opacity, bool drawCoords, (int x, int y) offsetFromSource) {
 			var pixels = img.GetPixels();
 			//vertical lines
 			for(int x = 0; x < img.Width; x++) {
@@ -87,16 +84,16 @@ namespace TerrainFactory.Modules.Bitmaps {
 			}
 		}
 
-		private static void DrawGridLegend(MagickImage img, int size, Color color, int index) {
+		private static void DrawGridLegend(MagickImage img, int size, MagickColor color, int index) {
 			//Draw info text in the corner
 			int x = 2;
-			int y = (int)(2 + index * (SystemFonts.MessageBoxFont.Size + 2));
+			int y = (int)(2 + index * 16);
 			DrawString(img, size.ToString(), color, ref x, ref y);
 		}
 
-		private static void DrawString(MagickImage img, string str, Color color, ref int x, ref int y) {
+		private static void DrawString(MagickImage img, string str, MagickColor color, ref int x, ref int y) {
 			if(MinDim(img) > 200) {
-				var drawables = new Drawables().FillColor(new MagickColor(ColorUtil.CreateMagickColor(color))).Text(x, y, str);
+				var drawables = new Drawables().FillColor(new MagickColor(color)).Text(x, y, str);
 				drawables.Draw(img);
 				//g.DrawString(str, SystemFonts.MessageBoxFont, new SolidBrush(color), new PointF(x, y));
 			} else {

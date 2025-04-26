@@ -1,14 +1,6 @@
-﻿using TerrainFactory;
-using TerrainFactory.Export;
-using TerrainFactory.Formats;
-using ImageMagick;
+﻿using ImageMagick;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Imaging;
-using System.IO;
 using System.Numerics;
-using System.Text;
 
 namespace TerrainFactory.Modules.Bitmaps {
 	class ImageGeneratorMagick {
@@ -20,7 +12,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 			Depth32
 		}
 
-		private MagickImage image;
+		public MagickImage Image { get; private set; }
 
 		ImageType imageType;
 		ElevationData data;
@@ -40,27 +32,17 @@ namespace TerrainFactory.Modules.Bitmaps {
 			else throw new NotImplementedException();
 		}
 
-		public MagickImage GetImage()
-		{
-			return image;
-		}
-
-		public Bitmap GetImageAsBitmap()
-		{
-			return image.ToBitmap(ImageFormat.Png);
-		}
-
 		public void WriteFile(string filename, MagickFormat format) {
-			image.Write(filename, format);
+			Image.Write(filename, format);
 		}
 
 		private void MakeHeightmap(bool is16bit) {
-			image = CreateImage(0, is16bit ? MagickFormat.Png48 : MagickFormat.Png24);
-			var pixels = image.GetPixels();
-			for(int x = 0; x < image.Width; x++) {
-				for(int y = 0; y < image.Height; y++) {
+			Image = CreateImage(0, is16bit ? MagickFormat.Png48 : MagickFormat.Png24);
+			var pixels = Image.GetPixels();
+			for(int x = 0; x < Image.Width; x++) {
+				for(int y = 0; y < Image.Height; y++) {
 					float v = GetHeightmapLuminance(x, y);
-					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
+					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
 				}
 			}
 		}
@@ -74,23 +56,23 @@ namespace TerrainFactory.Modules.Bitmaps {
 		{
 			if (sharp)
 			{
-				image = CreateImage(-1);
+				Image = CreateImage(-1);
 			}
 			else
 			{
-				image = CreateImage(0);
+				Image = CreateImage(0);
 			}
-			var pixels = image.GetPixels();
+			var pixels = Image.GetPixels();
 			var normals = NormalMapper.CalculateNormals(data, sharp);
-			for (int x = 0; x < image.Width; x++)
+			for (int x = 0; x < Image.Width; x++)
 			{
-				for (int y = 0; y < image.Height; y++)
+				for (int y = 0; y < Image.Height; y++)
 				{
 					Vector3 nrm = normals[x, y];
 					float r = 0.5f + nrm.X / 2f;
 					float g = 0.5f + nrm.Y / 2f;
 					float b = 0.5f + nrm.Z / 2f;
-					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColor(r, g, b));
+					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColor(r, g, b));
 				}
 			}
 		}
@@ -103,13 +85,13 @@ namespace TerrainFactory.Modules.Bitmaps {
 		private void MakeHillshademap(float sunYawDegrees, float sunPitchDegrees, float intensity, float heightmapBlend)
 		{
 			var normals = NormalMapper.CalculateNormals(data, true);
-			image = CreateImage();
-			var pixels = image.GetPixels();
+			Image = CreateImage();
+			var pixels = Image.GetPixels();
 
 			Vector3 sunNormal = RotationToNormal(sunYawDegrees, sunPitchDegrees);
-			for (int x = 0; x < image.Width; x++)
+			for (int x = 0; x < Image.Width; x++)
 			{
-				for (int y = 0; y < image.Height; y++)
+				for (int y = 0; y < Image.Height; y++)
 				{
 					Vector3 nrm = normals[x, y];
 					float luminance = -Vector3.Dot(nrm, sunNormal);
@@ -119,7 +101,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 						float hmLuminance = GetHeightmapLuminance(x, y) * 1.6f;
 						luminance *= MathUtils.Lerp(1f, hmLuminance, heightmapBlend);
 					}
-					pixels.SetPixel(x, image.Height - y - 1, ColorUtil.CreateColorGrayscale(MathUtils.Clamp01(luminance)));
+					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColorGrayscale(MathUtils.Clamp01(luminance)));
 				}
 			}
 		}

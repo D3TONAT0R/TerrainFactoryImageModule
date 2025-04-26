@@ -1,30 +1,17 @@
-﻿using TerrainFactory;
-using TerrainFactory.Export;
-using TerrainFactory.Formats;
-using TerrainFactory.Util;
-using ImageMagick;
+﻿using ImageMagick;
 using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
-using System.IO;
-using System.Numerics;
-using System.Text;
 
 namespace TerrainFactory.Modules.Bitmaps
 {
 	public static class ImageExporter
 	{
 
-		public static Bitmap GenerateCompositeMap(ElevationData data, Bitmap baseMap, float heightmapIntensity, float hillshadeIntensity)
+		public static MagickImage GenerateCompositeMap(ElevationData data, MagickImage baseMap, float heightmapIntensity, float hillshadeIntensity)
 		{
-			Bitmap result;
+			MagickImage result;
 			if (baseMap == null)
 			{
-				result = new Bitmap(data.CellCountX, data.CellCountY);
-				var graphics = Graphics.FromImage(result);
-				graphics.FillRectangle(new SolidBrush(Color.Gray), new Rectangle(0, 0, baseMap.Width, baseMap.Height));
+				result = new MagickImage(MagickColors.Gray, data.CellCountX, data.CellCountY);
 			}
 			else
 			{
@@ -32,33 +19,42 @@ namespace TerrainFactory.Modules.Bitmaps
 			}
 			if (heightmapIntensity > 0)
 			{
-				var hm = new ImageGeneratorMagick(data, ImageType.Heightmap8, data.LowPoint, data.HighPoint).GetImageAsBitmap();
+				var hm = new ImageGeneratorMagick(data, ImageType.Heightmap8, data.LowPoint, data.HighPoint).Image;
 				result = OverlayBlend(result, hm, heightmapIntensity);
 			}
 			if (hillshadeIntensity > 0)
 			{
-				var hs = new ImageGeneratorMagick(data, ImageType.Hillshade, data.LowPoint, data.HighPoint).GetImageAsBitmap();
+				var hs = new ImageGeneratorMagick(data, ImageType.Hillshade, data.LowPoint, data.HighPoint).Image;
 				result = OverlayBlend(result, hs, hillshadeIntensity);
 			}
 			return result;
 		}
 
-		private static Bitmap OverlayBlend(Bitmap a, Bitmap b, float strength)
+		private static MagickImage OverlayBlend(MagickImage a, MagickImage b, float strength)
 		{
-			Bitmap result = new Bitmap(a.Width, a.Height);
+			MagickImage result = new MagickImage(MagickColors.Black, a.Width, a.Height);
+			var pixelsA = a.GetPixels();
+			var pixelsB = b.GetPixels();
+			var resultPixels = result.GetPixels();
+			float[] channels = new float[4];
 			for (int y = 0; y < a.Height; y++)
 			{
 				for (int x = 0; x < a.Width; x++)
 				{
-					var ca = a.GetPixel(x, y);
-					var cb = b.GetPixel(x, y);
-					result.SetPixel(x, y, OverlayBlend(ca, cb, strength));
+					var ca = pixelsA.GetPixel(x, y).ToColor();
+					var cb = pixelsB.GetPixel(x, y).ToColor();
+					var cr = OverlayBlend(ca, cb, strength);
+					channels[0] = cr.R / 255f;
+					channels[1] = cr.G / 255f;
+					channels[2] = cr.B / 255f;
+					channels[3] = cr.A / 255f;
+					resultPixels.SetPixel(x, y, channels);
 				}
 			}
 			return result;
 		}
 
-		private static Color OverlayBlend(Color ca, Color cb, float strength)
+		private static IMagickColor<float> OverlayBlend(IMagickColor<float> ca, IMagickColor<float> cb, float strength)
 		{
 			float[] a = new float[] { ca.R / 255f, ca.G / 255f, ca.B / 255f };
 			float[] b = new float[] { cb.R / 255f, cb.G / 255f, cb.B / 255f };
@@ -75,7 +71,7 @@ namespace TerrainFactory.Modules.Bitmaps
 				}
 				r[i] = Math.Max(0, Math.Min(1, r[i]));
 			}
-			return Color.FromArgb((byte)(r[0] * 255), (byte)(r[1] * 255), (byte)(r[2] * 255));
+			return MagickColor.FromRgb((byte)(r[0] * 255), (byte)(r[1] * 255), (byte)(r[2] * 255));
 		}
 	}
 }

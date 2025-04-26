@@ -1,12 +1,9 @@
-using TerrainFactory;
-using TerrainFactory.Modules.Bitmaps;
 using ImageMagick;
-using System.Drawing;
 
 namespace TerrainFactory.Modules.Bitmaps {
 	public static class PixelFont {
 
-		public static void DrawString(MagickImage img, string str, ref int x, ref int y, Color color, float opacity) {
+		public static void DrawString(MagickImage img, string str, ref int x, ref int y, MagickColor color, float opacity) {
 			x++;
 			y++;
 			var pixels = img.GetPixels();
@@ -15,7 +12,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 			}
 		}
 
-		public static void DrawChar(MagickImage img, IPixelCollection<float> pixels, char c, ref int x, ref int y, Color color, float opacity) {
+		public static void DrawChar(MagickImage img, IPixelCollection<float> pixels, char c, ref int x, ref int y, MagickColor color, float opacity) {
 			bool[,] map = GetCharPixels(c);
 			for(int i = 0; i < map.GetLength(0); i++) {
 				for(int j = 0; j < map.GetLength(1); j++) {

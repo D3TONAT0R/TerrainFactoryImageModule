@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
+using ExifLibrary;
 using ImageMagick;
 
 namespace TerrainFactory.Modules.Bitmaps.Import
@@ -12,21 +13,17 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 		{
 			MagickNET.Initialize();
 
-			var task = new NExifTool.Reader.ExifReader(new NExifTool.ExifToolOptions()).ReadExifAsync(importPath);
-			task.RunSynchronously();
-			ConsoleOutput.WriteLine(task.Result.ToString());
+			var exifImage = ExifLibrary.ImageFile.FromFile(importPath);
+			exifImage.Properties.Get(ExifLibrary.ExifTag.XPosition);
 
 			using(var input = new MagickImage(importPath))
 			{
-				//TODO: ImageMagick does not load exif data (is null)
-				var exif = input.GetExifProfile();
-
 				int imgWidth = input.Width;
 				int imgHeight = input.Height;
 				int depth = input.Depth / 8;
 
 				float cellSize;
-				var scaleTag = exif.GetValue(ExifTag.PixelScale);
+				var scaleTag = exifImage.Properties.Get<ExifDoubleArray>((ExifLibrary.ExifTag)133550);
 				if(scaleTag != null && scaleTag.Value.Length > 0)
 				{
 					cellSize = (float)scaleTag.Value[0];
@@ -42,7 +39,7 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 				}
 
 				Vector2 lowerCornerCoordinate;
-				var tiepointData = exif.GetValue(ExifTag.ModelTiePoint);
+				var tiepointData = exifImage.Properties.Get<ExifDoubleArray>((ExifLibrary.ExifTag)133922);
 				if(tiepointData != null && tiepointData.Value.Length > 0)
 				{
 					float pixelX = (float)tiepointData.Value[0];
@@ -55,12 +52,12 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 				}
 				else
 				{
-					ConsoleOutput.WriteWarning("Coordinates not defined, assuming position of (0,0).");
+					ConsoleOutput.WriteWarning("Tiepoints not found, assuming position of (0,0).");
 					lowerCornerCoordinate = Vector2.Zero;
 				}
 
 				float? nodataValue = null;
-				var nodataValueString = exif.GetValue(ExifTag.GDALNoData)?.Value;
+				var nodataValueString = exifImage.Properties.Get<ExifEncodedString>((ExifLibrary.ExifTag)142113)?.Value;
 				if(nodataValueString != null)
 				{
 					nodataValue = float.Parse(nodataValueString);
