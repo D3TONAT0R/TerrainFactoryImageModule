@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using ImageMagick.Drawing;
 
 namespace TerrainFactory.Modules.Bitmaps
 {
@@ -64,7 +65,7 @@ namespace TerrainFactory.Modules.Bitmaps
 					}
 					if(drawCoords && x > 20) {
 						int tx = x;
-						int ty = img.Height - 2;
+						int ty = (int)img.Height - 2;
 						DrawString(img, (x + offsetFromSource.x).ToString(), color, ref tx, ref ty);
 					}
 				}
@@ -77,7 +78,7 @@ namespace TerrainFactory.Modules.Bitmaps
 					}
 					if(drawCoords && y > 20) {
 						int tx = 2;
-						int ty = img.Height - y - 1;
+						int ty = (int)img.Height - y - 1;
 						DrawString(img, (y + offsetFromSource.y).ToString(), color, ref tx, ref ty);
 					}
 				}
@@ -102,8 +103,8 @@ namespace TerrainFactory.Modules.Bitmaps
 		}
 
 		private static int MinDim(MagickImage img) {
-			if(img.Width < img.Height) return img.Width;
-			else return img.Height;
+			if(img.Width < img.Height) return (int)img.Width;
+			else return (int)img.Height;
 		}
 	}
 }

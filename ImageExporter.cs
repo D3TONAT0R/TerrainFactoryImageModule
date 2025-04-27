@@ -11,7 +11,7 @@ namespace TerrainFactory.Modules.Bitmaps
 			MagickImage result;
 			if (baseMap == null)
 			{
-				result = new MagickImage(MagickColors.Gray, data.CellCountX, data.CellCountY);
+				result = new MagickImage(MagickColors.Gray, (uint)data.CellCountX, (uint)data.CellCountY);
 			}
 			else
 			{

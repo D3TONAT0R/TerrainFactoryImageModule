@@ -42,7 +42,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 			for(int x = 0; x < Image.Width; x++) {
 				for(int y = 0; y < Image.Height; y++) {
 					float v = GetHeightmapLuminance(x, y);
-					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
+					pixels.SetPixel(x, (int)Image.Height - y - 1, ColorUtil.CreateColorGrayscale(v));
 				}
 			}
 		}
@@ -72,7 +72,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 					float r = 0.5f + nrm.X / 2f;
 					float g = 0.5f + nrm.Y / 2f;
 					float b = 0.5f + nrm.Z / 2f;
-					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColor(r, g, b));
+					pixels.SetPixel(x, (int)Image.Height - y - 1, ColorUtil.CreateColor(r, g, b));
 				}
 			}
 		}
@@ -101,7 +101,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 						float hmLuminance = GetHeightmapLuminance(x, y) * 1.6f;
 						luminance *= MathUtils.Lerp(1f, hmLuminance, heightmapBlend);
 					}
-					pixels.SetPixel(x, Image.Height - y - 1, ColorUtil.CreateColorGrayscale(MathUtils.Clamp01(luminance)));
+					pixels.SetPixel(x, (int)Image.Height - y - 1, ColorUtil.CreateColorGrayscale(MathUtils.Clamp01(luminance)));
 				}
 			}
 		}
@@ -123,7 +123,7 @@ namespace TerrainFactory.Modules.Bitmaps {
 
 		private MagickImage CreateImage(int width, int height, MagickFormat format = MagickFormat.Png24)
 		{
-			var img = new MagickImage("xc:black", width, height);
+			var img = new MagickImage(MagickColors.Black, (uint)width, (uint)height);
 			img.Format = format;
 			return img;
 		}

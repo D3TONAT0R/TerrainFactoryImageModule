@@ -22,7 +22,7 @@ namespace TerrainFactory.Modules.Bitmaps
 
 		public static void SetPixel(MagickImage img, IPixelCollection<float> pixels, int x, int y, IMagickColor<float> color, float opacity)
 		{
-			y = img.Height - y - 1;
+			y = (int)img.Height - y - 1;
 			if(x < 0 || x >= img.Width || y < 0 || y >= img.Height) return;
 			var src = pixels.GetPixel(x, y).ToColor();
 			var col = Lerp(src, color, opacity);

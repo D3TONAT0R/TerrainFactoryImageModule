@@ -82,18 +82,18 @@ namespace TerrainFactory.Modules.Bitmaps
 			var image = new MagickImage(stream);
 			stream.Dispose();
 			ConsoleOutput.UpdateProgressBar(progString, 0.5f);
-			ElevationData heightData = new ElevationData(image.Width, image.Height, filepath);
+			ElevationData heightData = new ElevationData((int)image.Width, (int)image.Height, filepath);
 			heightData.CellSize = 1;
 			heightData.NoDataValue = -9999;
 
-			int width = image.Width;
-			int height = image.Height;
+			uint width = image.Width;
+			uint height = image.Height;
 			int depth = 4;
 			var pixels = image.GetPixels();
 
 			int progress = 0;
 
-			Parallel.For(0, width, (x) =>
+			Parallel.For(0, (int)width, x =>
 			{
 				for (int y = 0; y < height; y++)
 				{
