@@ -53,8 +53,8 @@ namespace TerrainFactory.Modules.Bitmaps
 				(ElevationData d) =>
 				{
 					d.RecalculateElevationRange(false);
-					d.OverrideLowPoint = low;
-					d.OverrideHighPoint = high;
+					d.CustomBlackPoint = low;
+					d.CustomWhitePoint = high;
 				}
 			);
 		}
@@ -69,8 +69,8 @@ namespace TerrainFactory.Modules.Bitmaps
 				(ElevationData d) =>
 				{
 					d.RecalculateElevationRange(false);
-					d.OverrideLowPoint = 0;
-					d.OverrideHighPoint = 255;
+					d.CustomBlackPoint = 0;
+					d.CustomWhitePoint = 255;
 				}
 			);
 		}
@@ -84,7 +84,6 @@ namespace TerrainFactory.Modules.Bitmaps
 			ConsoleOutput.UpdateProgressBar(progString, 0.5f);
 			ElevationData heightData = new ElevationData((int)image.Width, (int)image.Height, filepath);
 			heightData.CellSize = 1;
-			heightData.NoDataValue = -9999;
 
 			uint width = image.Width;
 			uint height = image.Height;
@@ -98,7 +97,7 @@ namespace TerrainFactory.Modules.Bitmaps
 				for (int y = 0; y < height; y++)
 				{
 					var c = pixels.GetPixel(x, y).ToColor();
-					iterator(heightData, x, y, c);
+					iterator(heightData, x, (int)(height - y - 1), c);
 				}
 				progress++;
 				ConsoleOutput.UpdateProgressBar(progString, 0.5f + progress / (float)width * 0.5f);
@@ -157,23 +156,23 @@ namespace TerrainFactory.Modules.Bitmaps
 		{
 			if (channel == ColorChannel.Red)
 			{
-				return c.R;
+				return c.R / ushort.MaxValue;
 			}
 			else if (channel == ColorChannel.Green)
 			{
-				return c.G;
+				return c.G / ushort.MaxValue;
 			}
 			else if (channel == ColorChannel.Blue)
 			{
-				return c.B;
+				return c.B / ushort.MaxValue;
 			}
 			else if (channel == ColorChannel.Alpha)
 			{
-				return c.A;
+				return c.A / ushort.MaxValue;
 			}
 			else
 			{
-				return c.R;
+				return c.R / ushort.MaxValue;
 			}
 		}
 	}

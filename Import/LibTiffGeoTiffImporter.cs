@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Numerics;
 using System.Text;
+using TerrainFactory.Formats;
 
 namespace TerrainFactory.Modules.Bitmaps.Import
 {
@@ -51,7 +52,7 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					lowerCornerCoordinate = Vector2.Zero;
 				}
 
-				float? nodataValue = null;
+				float nodataValue = AsciiGridFormat.DEFAULT_NODATA_VALUE;
 				var nodataValueString = input.GetField((TiffTag)42113)?[0].ToString();
 				if(nodataValueString != null)
 				{
@@ -63,10 +64,6 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					CellSize = cellSize,
 					LowerCornerPosition = lowerCornerCoordinate
 				};
-				if(nodataValue.HasValue)
-				{
-					data.NoDataValue = nodataValue.Value;
-				}
 
 				if(input.IsTiled())
 				{
@@ -104,6 +101,10 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 									else
 									{
 										throw new NotImplementedException();
+									}
+									if(height == nodataValue)
+									{
+										height = ElevationData.NODATA_VALUE;
 									}
 									data.SetHeightAt(xMin + x, (imgHeight - 1) - (yMin + y), height);
 								}

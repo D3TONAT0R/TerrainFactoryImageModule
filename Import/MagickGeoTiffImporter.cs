@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -68,10 +69,6 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					CellSize = cellSize,
 					LowerCornerPosition = lowerCornerCoordinate
 				};
-				if(nodataValue.HasValue)
-				{
-					data.NoDataValue = nodataValue.Value;
-				}
 
 				var pixels = input.GetPixelsUnsafe();
 				for(int y = 0; y < imgHeight; y++)
@@ -79,6 +76,10 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					for(int x = 0; x < imgWidth; x++)
 					{
 						float elevation = pixels[x, (int)imgHeight - y - 1].GetChannel(0) / 65536f;
+						if(IsNoData(elevation, nodataValue))
+						{
+							elevation = ElevationData.NODATA_VALUE;
+						}
 						data.SetHeightAt(x, y, elevation);
 					}
 				}
@@ -86,6 +87,16 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 				data.RecalculateElevationRange(true);
 				return data;
 			}
+		}
+
+		private static bool IsNoData(float v, float? nd)
+		{
+			if(float.IsNaN(v)) return true;
+			if(nd.HasValue)
+			{
+				return Math.Abs(v - nd.Value) < 0.01f;
+			}
+			return false;
 		}
 
 		public static ElevationData Import(Stream stream, params string[] args)
@@ -147,10 +158,6 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					CellSize = cellSize,
 					LowerCornerPosition = lowerCornerCoordinate
 				};
-				if(nodataValue.HasValue)
-				{
-					data.NoDataValue = nodataValue.Value;
-				}
 
 				var pixels = input.GetPixelsUnsafe();
 				for(int y = 0; y < imgHeight; y++)
@@ -158,6 +165,10 @@ namespace TerrainFactory.Modules.Bitmaps.Import
 					for(int x = 0; x < imgWidth; x++)
 					{
 						float elevation = pixels[x, (int)imgHeight - y - 1].GetChannel(0) / 65536f;
+						if(IsNoData(elevation, nodataValue))
+						{
+							elevation = ElevationData.NODATA_VALUE;
+						}
 						data.SetHeightAt(x, y, elevation);
 					}
 				}
