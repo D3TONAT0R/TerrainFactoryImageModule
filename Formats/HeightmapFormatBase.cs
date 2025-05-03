@@ -6,11 +6,13 @@ using TerrainFactory.Modules.Bitmaps;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Drawing;
 
 namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public abstract class HeightmapFormatBase : FileFormat
 	{
+		public abstract bool Is16BitFormat { get; }
 
 		protected override ElevationData ImportFile(string importPath, params string[] args)
 		{
@@ -20,6 +22,13 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 		public override void ModifyFileName(ExportTask task, FileNameBuilder nameBuilder)
 		{
 			nameBuilder.suffix = "height";
+		}
+
+		protected override bool ExportFile(string path, ExportTask task)
+		{
+			var img = ImageGenerator.CreateHeightMap(task.data, Is16BitFormat);
+			img.Write(path, Is16BitFormat ? ImageMagick.MagickFormat.Png48 : ImageMagick.MagickFormat.Png24);
+			return true;
 		}
 	}
 }

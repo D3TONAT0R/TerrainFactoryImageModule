@@ -1,8 +1,4 @@
-﻿using TerrainFactory;
-using TerrainFactory.Export;
-using TerrainFactory.Formats;
-
-namespace TerrainFactory.Modules.Bitmaps.Formats
+﻿namespace TerrainFactory.Modules.Bitmaps.Formats
 {
 	public class HeightmapPNG8Format : HeightmapFormatBase
 	{
@@ -13,11 +9,6 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 		public override string Extension => "png";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.ImportAndExport;
 
-		protected override bool ExportFile(string path, ExportTask task)
-		{
-			var gen = new ImageGeneratorMagick(task.data, ImageType.Heightmap8, task.data.LowPoint, task.data.HighPoint);
-			gen.WriteFile(path, ImageMagick.MagickFormat.Png24);
-			return true;
-		}
+		public override bool Is16BitFormat => false;
 	}
 }

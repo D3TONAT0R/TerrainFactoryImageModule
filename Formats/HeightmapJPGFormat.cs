@@ -11,5 +11,7 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 		public override string Description => ReadableName;
 		public override string Extension => "jpg";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Import;
+
+		public override bool Is16BitFormat => false;
 	}
 }

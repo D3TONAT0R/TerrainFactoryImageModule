@@ -66,28 +66,10 @@ namespace TerrainFactory.Modules.Bitmaps
 			}
 		}
 
-		/*
-		private static Vector3 Normalize(Vector3 src)
-		{
-			float power = Math.Abs(src.X) + Math.Abs(src.Y) + Math.Abs(src.Z);
-			return src / power;
-		}
-		*/
-
 		private static float GetSlope(float from, float to, float gridSpacing)
 		{
 			float hdiff = to - from;
 			return (float)(Math.Atan(hdiff / gridSpacing) * Rad2Deg / 90f);
-		}
-
-		private static int Clamp(int v, int min, int max)
-		{
-			return Math.Max(min, Math.Min(max, v));
-		}
-
-		private static float Clamp(float v, float min, float max)
-		{
-			return Math.Max(min, Math.Min(max, v));
 		}
 	}
 }

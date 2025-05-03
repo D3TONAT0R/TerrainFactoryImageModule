@@ -22,10 +22,10 @@ namespace TerrainFactory.Modules.Bitmaps
 			sheet.InputData.LoadIfRequired();
 			var data = sheet.ApplyModificationChain(sheet.InputData.Current);
 
-			var exporter = new ImageGeneratorMagick(data, heightmap ? ImageType.Heightmap8 : ImageType.CombinedPreview, data.LowPoint, data.HighPoint);
-			MakeGrid(exporter.Image, data.offsetFromSource);
-			string path = Path.GetTempPath() + Guid.NewGuid().ToString() + ".png";
-			exporter.WriteFile(path, ImageMagick.MagickFormat.Png24);
+			var img = ImageGenerator.CreateImage(data, heightmap ? ImageType.Heightmap8 : ImageType.CombinedPreview);
+			MakeGrid(img, data.offsetFromSource);
+			string path = Path.GetTempPath() + Guid.NewGuid() + ".png";
+			img.Write(path, MagickFormat.Png24);
 			var p = new Process {
 				StartInfo = new ProcessStartInfo(path) {
 					UseShellExecute = true

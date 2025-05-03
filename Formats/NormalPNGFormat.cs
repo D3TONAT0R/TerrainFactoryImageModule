@@ -16,8 +16,8 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 
 		protected override bool ExportFile(string path, ExportTask task)
 		{
-			var gen = new ImageGeneratorMagick(task.data, ImageType.Normalmap, task.data.LowPoint, task.data.HighPoint);
-			gen.WriteFile(path, ImageMagick.MagickFormat.Png24);
+			var img = ImageGenerator.CreateNormalMap(task.data, false);
+			img.Write(path, ImageMagick.MagickFormat.Png24);
 			return true;
 		}
 

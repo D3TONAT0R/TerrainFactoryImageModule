@@ -15,6 +15,8 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 		public override string Extension => "tif";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Import;
 
+		public override bool Is16BitFormat => false;
+
 		protected override ElevationData ImportFile(string importPath, params string[] args)
 		{
 			return MagickGeoTiffImporter.Import(importPath, args);
