@@ -10,7 +10,7 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 	{
 		public override string Identifier => "GEOTIFF";
 		public override string ReadableName => "GeoTIFF";
-		public override string CommandKey => "geotif";
+		public override string Command => "geotif";
 		public override string Description => "GeoTIFF (32 Bit)";
 		public override string Extension => "tif";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Import;

@@ -9,7 +9,7 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 	{
 		public override string Identifier => "PNG_NM";
 		public override string ReadableName => "PNG Normal Map";
-		public override string CommandKey => "png-nm";
+		public override string Command => "png-nm";
 		public override string Description => ReadableName;
 		public override string Extension => "png";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Export;

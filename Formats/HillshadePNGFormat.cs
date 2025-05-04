@@ -9,7 +9,7 @@ namespace TerrainFactory.Modules.Bitmaps.Formats
 	{
 		public override string Identifier => "PNG_HS";
 		public override string ReadableName => "PNG Hillshade Map";
-		public override string CommandKey => "png-hs";
+		public override string Command => "png-hs";
 		public override string Description => ReadableName;
 		public override string Extension => "png";
 		public override FileSupportFlags SupportedActions => FileSupportFlags.Export;
